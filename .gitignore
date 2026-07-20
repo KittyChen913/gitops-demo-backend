@@ -1,38 +1,38 @@
-# Binaries for programs and plugins
+# 程式與外掛的二進位檔
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
+# 使用 `go test -c` 建置的測試二進位檔
 *.test
 
-# Output of the go coverage tool, specifically when used with LiteIDE
+# Go coverage 工具的輸出，特別是搭配 LiteIDE 時
 *.out
 
-# Dependency directories (remove the comment below to include it)
+# 相依套件目錄（移除下方註解即可納入）
 # vendor/
 
-# Go workspace file
+# Go workspace 檔案
 go.work
 go.work.sum
 
-# Build output
+# 建置輸出
 /bin/
 /dist/
 
-# Environment variables
+# 環境變數
 .env
 .env.*
 !.env.example
 
-# IDE / Editor
+# IDE／編輯器
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# 作業系統
 .DS_Store
 Thumbs.db

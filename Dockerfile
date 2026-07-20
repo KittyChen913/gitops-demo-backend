@@ -1,4 +1,4 @@
-# ── Build stage ──────────────────────────────────────────
+# ── 建置階段 ─────────────────────────────────────────────
 FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
@@ -11,7 +11,7 @@ RUN go build \
     -ldflags "-X main.commit=${COMMIT}" \
     -o server .
 
-# ── Runtime stage ─────────────────────────────────────────
+# ── 執行階段 ─────────────────────────────────────────────
 FROM alpine:latest
 
 WORKDIR /app
