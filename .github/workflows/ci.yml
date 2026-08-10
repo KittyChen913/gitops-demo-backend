@@ -1,6 +1,16 @@
 name: CI - Build & Push Docker Image
 
 on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'Dockerfile'
+      - '.github/actions/**'
+      - '.github/workflows/**'
   push:
     branches:
       - master
@@ -11,7 +21,53 @@ on:
       - 'docs/**'
 
 jobs:
+  validate-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+
+      - name: Lint GitHub Actions
+        uses: docker://rhysd/actionlint:1.7.12
+        with:
+          args: -color
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Check Go formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          unformatted="$(find . -type f -name '*.go' -not -path './.git/*' -exec gofmt -l {} +)"
+          if [[ -n "${unformatted}" ]]; then
+            printf 'The following files require gofmt:\n%s\n' "${unformatted}"
+            exit 1
+          fi
+
+      - name: Run Go tests
+        run: go test ./...
+
+      - name: Compile Go packages
+        run: go build ./...
+
+      - name: Build image without push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          build-args: |
+            COMMIT=${{ github.sha }}
+
   build-and-push:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     environment: ${{ github.ref_type == 'tag' && 'prod' || 'dev' }}
     permissions:
@@ -23,7 +79,7 @@ jobs:
 
       - name: Determine image tag
         id: image-tag
-        run: echo "tag=${{ github.ref_type == 'tag' && github.ref_name || 'dev' }}" >> $GITHUB_OUTPUT
+        run: echo "tag=${{ github.ref_type == 'tag' && github.ref_name || 'dev' }}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v4
