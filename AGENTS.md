@@ -6,7 +6,7 @@
 
 - 本 repo 維護 Go 後端 API、Dockerfile 與後端映像建置 workflow。
 - Kubernetes manifests、Kustomize overlays 與 ArgoCD ApplicationSet 由 `gitops-demo-apps` 管理。
-- Cluster、ArgoCD 平台與 GitOps bootstrap 分別由 `gitops-demo-cluster`、`gitops-demo-infra` 管理。
+- Cluster、ArgoCD 平台與 GitOps bootstrap 分別由 `gitops-demo-cluster`、`gitops-demo-argocd` 管理。
 - 除非使用者明確要求，不得在本 repo 加入或修改其他 repository 的部署責任。
 
 ## 註解與術語規範
