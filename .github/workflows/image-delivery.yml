@@ -1,4 +1,4 @@
-name: CI - Build & Push Docker Image
+name: Image Delivery
 
 on:
   pull_request:
@@ -22,6 +22,7 @@ on:
 
 jobs:
   validate-pr:
+    name: Validate
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -67,6 +68,7 @@ jobs:
             COMMIT=${{ github.sha }}
 
   build-and-push:
+    name: Publish Image
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     environment: ${{ github.ref_type == 'tag' && 'prod' || 'dev' }}
